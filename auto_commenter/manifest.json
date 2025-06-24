@@ -1,0 +1,42 @@
+{
+  "manifest_version": 3,
+  "name": "Auto Commenter",
+  "version": "1.0",
+  "description": "Automatically searches Naver and Tistory blogs and writes comments.",
+  "permissions": ["tabs", "scripting", "storage"],
+  "host_permissions": [
+    "https://section.blog.naver.com/*",
+    "https://blog.naver.com/*",
+    "https://www.tistory.com/*",
+    "https://*.tistory.com/*"
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "icons/icon.png",
+      "48": "icons/icon.png",
+      "128": "icons/icon.png"
+    }
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://section.blog.naver.com/*"],
+      "js": ["naver/search.js"]
+    },
+    {
+      "matches": ["https://blog.naver.com/*"],
+      "js": ["naver/comment.js"]
+    },
+    {
+      "matches": ["https://www.tistory.com/search*"],
+      "js": ["tistory/search.js"]
+    },
+    {
+      "matches": ["https://*.tistory.com/*"],
+      "js": ["tistory/comment.js"]
+    }
+  ]
+}
