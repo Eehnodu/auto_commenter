@@ -1,6 +1,5 @@
 // popup.js
-
-document.getElementById("start").addEventListener("click", () => {
+document.getElementById("start").addEventListener("click", async () => {
   const keyword = document.getElementById("keyword").value.trim();
   const platform = document.querySelector(
     'input[name="platform"]:checked'
@@ -16,9 +15,19 @@ document.getElementById("start").addEventListener("click", () => {
     return;
   }
 
-  chrome.storage.local.set({ keyword, comments, platform }, () => {
-    chrome.runtime.sendMessage({ type: "start_search" });
-    window.close();
+  chrome.storage.local.set({ keyword, comments, platform }, async () => {
+    if (platform === "tistory") {
+      try {
+        const results = await searchTistory(keyword); // tistory/search.js에 정의된 함수
+        console.log("티스토리 검색 결과:", results);
+        // 여기서 results를 처리하거나 comment.js에 전달하는 방식 설계 가능
+      } catch (e) {
+        showAlert("검색 중 오류가 발생했습니다.");
+        console.error(e);
+      }
+    } else if (platform === "naver") {
+      // 이후 네이버 API 호출 시 이쪽 처리
+    }
   });
 });
 

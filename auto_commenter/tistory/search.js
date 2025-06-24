@@ -1,15 +1,12 @@
-console.log("🔍 티스토리 검색 페이지 스크립트 실행");
+// tistory/search.js
+async function searchTistory(keyword) {
+  const url = `https://www.tistory.com/api/v1/search/posts?keyword=${encodeURIComponent(
+    keyword
+  )}&page=1&sort=ACCURACY`;
 
-setTimeout(() => {
-  const anchors = document.querySelectorAll("a.search_result_title");
+  const res = await fetch(url);
+  const json = await res.json();
+  console.log("티스토리 검색 응답:", json);
 
-  const links = [...anchors]
-    .map((a) => a.href)
-    .filter((h) => h.includes(".tistory.com"));
-
-  links.slice(0, 3).forEach((link, i) => {
-    setTimeout(() => {
-      window.open(link, "_blank");
-    }, i * 3000); // 3초 간격으로 열기
-  });
-}, 3000);
+  return json.data.searchedEntries;
+}
