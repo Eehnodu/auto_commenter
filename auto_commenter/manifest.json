@@ -18,7 +18,7 @@
   },
   "content_scripts": [
     {
-      "matches": ["https://*.tistory.com/*"],
+      "matches": ["https://*/**"],
       "js": ["tistory/comment.js"],
       "run_at": "document_idle"
     }
