@@ -1,20 +1,37 @@
-console.log("💬 티스토리 댓글 자동 입력 시작");
+// tistory/comment.js
+async function postCommentToTistory(entryId, blogDomain, commentText) {
+  const url = `https://${blogDomain}/m/api/${entryId}/comment`;
 
-chrome.storage.local.get("comments", ({ comments }) => {
-  const textarea = document.querySelector("textarea[name='comment']");
-  const button = document.querySelector("button.submit");
+  const payload = {
+    captcha: "",
+    comment: commentText,
+    homepage: "https://automaker404.tistory.com",
+    isSecret: false,
+    mentionId: null,
+    name: "오메404",
+    parent: null,
+    password:
+      "f215faf9d88b7f0a881632ee22459ee452a296c808d261b6cc993d3a1fd0600e",
+  };
 
-  if (!textarea || !button) {
-    console.warn("댓글 입력창 또는 버튼을 찾지 못했습니다.");
-    return;
+  try {
+    const response = await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(payload),
+      credentials: "include",
+    });
+
+    if (response.ok) {
+      console.log(`✅ 댓글 성공: ${blogDomain}/${entryId}`);
+    } else {
+      console.error(
+        `❌ 댓글 실패 (${response.status}): ${blogDomain}/${entryId}`
+      );
+    }
+  } catch (error) {
+    console.error("요청 중 에러 발생:", error);
   }
-
-  const randomComment = comments[Math.floor(Math.random() * comments.length)];
-  textarea.value = randomComment;
-  textarea.dispatchEvent(new Event("input", { bubbles: true }));
-
-  setTimeout(() => {
-    button.click();
-    console.log("✅ 댓글 작성 완료:", randomComment);
-  }, 1000);
-});
+}
