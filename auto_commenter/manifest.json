@@ -3,8 +3,8 @@
   "name": "Auto Commenter",
   "version": "1.0",
   "description": "Automatically searches Naver and Tistory blogs and writes comments.",
-  "permissions": ["storage"],
-  "host_permissions": ["https://www.tistory.com/*"],
+  "permissions": ["storage", "scripting", "tabs", "activeTab"],
+  "host_permissions": ["https://*.tistory.com/*"],
   "action": {
     "default_popup": "popup.html",
     "default_icon": {
@@ -13,6 +13,14 @@
       "128": "icons/icon.png"
     }
   },
-  "content_scripts": [],
-  "background": {}
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://*.tistory.com/*"],
+      "js": ["tistory/comment.js"],
+      "run_at": "document_idle"
+    }
+  ]
 }

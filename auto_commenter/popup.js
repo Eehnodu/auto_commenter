@@ -1,4 +1,3 @@
-// popup.js
 document.getElementById("start").addEventListener("click", async () => {
   const keyword = document.getElementById("keyword").value.trim();
   const platform = document.querySelector(
@@ -26,24 +25,27 @@ document.getElementById("start").addEventListener("click", async () => {
           return;
         }
 
-        const targetEntries = results.slice(0, 1); // → 테스트용
-        // const targetEntries = results;
-
+        const targetEntries = results.slice(0, 1);
         for (const entry of targetEntries) {
           const entryId = entry.entryId;
           const blogDomain = new URL(entry.blogUrl).hostname;
+          const entryUrl = entry.entryUrl;
           const randomComment =
             comments[Math.floor(Math.random() * comments.length)];
 
-          await postCommentToTistory(entryId, blogDomain, randomComment);
-          console.log(`✅ 댓글 작성 완료: ${entry.blogUrl}`);
+          // 📨 background로 메시지 전송
+          chrome.runtime.sendMessage({
+            type: "START_COMMENT",
+            entryId,
+            blogDomain,
+            entryUrl,
+            commentText: randomComment,
+          });
         }
       } catch (e) {
         showAlert("검색 또는 댓글 작성 중 오류가 발생했습니다.");
         console.error(e);
       }
-    } else if (platform === "naver") {
-      // 이후 네이버 API 호출 시 이쪽 처리
     }
   });
 });
